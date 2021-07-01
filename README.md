@@ -1,4 +1,4 @@
-BootstrAPI
+bootstrapi
 ==========
 
 Automatically generate an OpenAPI for your existing database.
