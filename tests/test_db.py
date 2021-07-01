@@ -2,7 +2,7 @@ import sqlite3
 import pytest
 import os
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def database():
     try:
         os.remove('./tests/data.db')

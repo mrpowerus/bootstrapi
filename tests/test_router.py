@@ -7,7 +7,7 @@ from sqlalchemy.ext.automap import automap_base
 from tests.test_db import database
 
 @pytest.fixture
-def app(engine):
+def app(engine,database):
     app = FastAPI(title='BootstrAPI')
     Base = automap_base()
     Base.prepare(engine)

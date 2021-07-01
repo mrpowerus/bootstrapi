@@ -38,14 +38,17 @@ class BootstrAPIRouter(APIRouter):
         super(APIRouter).__init__(*args,**kwargs)
     
     def _get(self,id=None, request:Request=None):
-        sqlalchemy_query = self.__get_autoquery_from_request(request)
+        query = self.__get_autoquery_from_request(request)
         url_query = unquote(str(request.query_params)).replace('+',' ')
-        return sqlalchemy_query.apply_odataquery(url_query,id)
+        result = query.apply_odataquery(url_query,id)
+        query.session.close_all()
+        return result
     
     def _post(self, type):
         def func(input,request:Request):
             query=self.__get_autoquery_from_request(request)
             output=query.insert(input)
+            query.session.close_all()
             return jsonable_encoder(output)
         func.__annotations__['input']= type
         return func
@@ -54,6 +57,7 @@ class BootstrAPIRouter(APIRouter):
         def func(id,input,request:Request):
             query = self.__get_autoquery_from_request(request)
             output=query.patch(input,id)
+            query.session.close_all()
             return jsonable_encoder(output)
         func.__annotations__['input'] = type
         return func
@@ -62,13 +66,15 @@ class BootstrAPIRouter(APIRouter):
         def func(id,input,request:Request):
             query = self.__get_autoquery_from_request(request)
             output=query.put(input,id)
+            query.session.close_all()
             return jsonable_encoder(output)
         func.__annotations__['input'] = type
         return func
 
     def _delete(self,id,request:Request):
-        sqlalchemy_query = self.__get_autoquery_from_request(request)
-        sqlalchemy_query.remove(id)
+        query = self.__get_autoquery_from_request(request)
+        query.remove(id)
+        query.session.close_all()
 
         
     @property
@@ -88,7 +94,7 @@ class BootstrAPIRouter(APIRouter):
                 APIRoute(f"/{name}"+"/{id}", self._get,methods=['GET'], description=f'Get {name} by id',tags=[name]),
                 APIRoute(f"/{name}"+"/{id}", self._put(pydantic_model),methods=['PUT'], description=f'Put {name} by id',tags=[name]),
                 APIRoute(f"/{name}"+"/{id}", self._patch(pydantic_model),methods=['PATCH'], description=f'Patch {name} by id',tags=[name]),
-                APIRoute(f"/{name}"+"/{id}", self._delete,methodss=['DELETE'], description=f'Delete {name} by id',tags=[name])
+                APIRoute(f"/{name}"+"/{id}", self._delete,methods=['DELETE'], description=f'Delete {name} by id',tags=[name])
             ])
         return routes
 
