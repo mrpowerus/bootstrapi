@@ -7,7 +7,12 @@ Features
 --------
 - Generates an API for your current database
 - Generates OpenAPI docs 
-- Supports OData-like queries ($select, $filter, $expand)
+- Includes support for OData-like queries ($select, $filter, $expand)
+    - $select: `/tablename?$select=column1, column2`
+    - $filter: `/tablename?$filter=(column1 eq value1 or|and column2 eq value2)`
+    - $expand: `/tablename?$expand=table2`
+
+    Combining also works: `/tablename?$select=column1,column2&$filter=(column1 eq value1 or|and column2 eq value2)&$expand=table2`
 - Support all RESTful HTTP methods (GET, POST, PUT, PATCH, DELETE)
 - Supports all Databases supported by SQLAlchemy
 
