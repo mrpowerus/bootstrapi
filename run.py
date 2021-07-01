@@ -17,7 +17,7 @@ class EnvDefault(argparse.Action):
     It checks whether an environment variable exists and uses this as default argument if it does.
     '''
     def __init__(self, envvar, required=True, default=None, **kwargs):
-        if not default and envvar:
+        if envvar:
             if envvar in os.environ:
                 default = os.environ[envvar]
         if required and default:
