@@ -68,7 +68,7 @@ uvicorn.run(app, host='127.0.0.1', port=8000)
 ### Docker
 
 ```console
-$ docker run --env connection="YOUR_CONNECTION_STRING" -p 8000:8000 mrpowerus/bootstrapi
+$ docker run --env connection="YOUR_CONNECTION_STRING" -p 8000:8000 mrpowerus/bootstrapi:v0.1.1
 ```
 
 
